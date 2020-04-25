@@ -1,0 +1,166 @@
+﻿body {
+    background-color: #f6f6f6;
+    padding: 0;
+    margin: 0;
+    font-family: 'Raleway', 'Arial Rounded MT', Arial, Helvetica, sans-serif;
+    background-color: #361c00;
+    background-image: url("https://www.transparenttextures.com/patterns/tileable-wood.png");
+}
+
+#nav-bar{
+    width: 100%;
+    height: 120px;
+    background-color: black;
+}
+
+#nav-bar img{
+    height: 120px;
+}
+
+#info{
+    background-color: black;
+    color: white;
+    height: 100%;
+    margin: 0;
+    display: none;
+}
+
+#info h2{
+    margin: 0;
+    padding-top: 35px;
+}
+
+#brewContainer {
+    margin: 0;
+    padding: 0;
+    max-width: 1156px;
+    margin: 0 auto;
+}
+
+.brews {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    text-align: center;
+    height: 100%;
+}
+
+.brews img{
+    padding-top: 2%;
+    max-width: 100px;
+}
+
+.brews p{
+    margin-bottom: 0;
+    padding-bottom: 2%;
+}
+
+.typeDescription {
+    width: 650px;
+    height: 100%;
+    background-color: maroon;
+    font-family: 'Raleway', 'Arial Rounded MT', Arial, Helvetica, sans-serif;
+    font-size: 26px;
+    text-align: center;
+    margin: auto;
+    margin-top: 20px;
+    border-radius: 40px 40px 40px 40px;
+}
+
+.brewName {
+    width: 650px;
+    height: 100%;
+    background-color: cornflowerblue;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin: auto;
+    margin-top: 20px;
+    border-radius: 40px 40px 0px 0px;
+}
+
+.brewImage {
+    width: 650px;
+    height: 100%;
+    background-color: #f6f6f6;
+    text-align: center;
+    margin: auto;
+}
+
+.brewInfo {
+    width: 605px;
+    height: 100%;
+    background-color: cornflowerblue;
+    text-align: center;
+    margin: auto;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 0px 0px 40px 40px;
+}
+
+#top-body{
+    background-image: url("old-pub.jpg");
+    min-height: 760px;
+    width: 100%;
+    z-index: 2
+}
+
+#searches-section {
+    width: 37%;
+    background-color: rgba(255,255,255, 0.8);
+    text-align: center;
+    padding: 20px;
+    margin-top: 9%;
+    height: 320px;
+    border-radius: 5%;
+    z-index: 100;
+}
+
+#searches-section h2 {
+   font-weight: lighter;
+}
+
+#or h2{
+    font-weight: bold;
+}
+
+#searches-section label{
+    font-weight: bold;
+}
+
+
+input {
+    z-index: 1;
+    opacity: 0.99;
+}
+
+.searchName{
+    padding-bottom: 7px;
+}
+
+.searchFoodPairings {
+    padding-bottom: 7px;
+    margin-left: -45px;
+}
+
+.ddlPercent {
+    padding-bottom: 7px;
+}
+
+#searches-section h1{
+    padding-bottom: 0;
+}
+
+.Footer {
+    background-color: black;
+    line-height: 33px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: ghostwhite;
+    margin: 0;
+}
+
+.Footer p {
+    margin: 0;
+}

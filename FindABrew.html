@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Find A Brew</title>
+    <link href="FindABrew.css" rel="stylesheet" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="images.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="top-body">
+        <div id="nav-bar">
+            <center><a href="FindABrew.html"><img src="images.png" /></a></center>
+        </div>
+        <center>
+            <div id="searches-section">
+                <h1>Find the Brew You're Looking For!</h1>
+                <div class="searchName">
+                    <label>Search By Beer Name:</label>
+                    <input id="txtBeerName" />
+                </div>
+                
+                <div class="searchFoodPairings">
+                    <label>Type A Food to See Pairings: </label>
+                    <input id="txtFoodPairings" />
+                </div>
+
+                <div class="ddlPercent">
+                    <label>Percent Alcohol: </label>
+                    <select id="ddlABV">
+                        <option value="Blank"></option>
+                        <option value="abv_gt=0.9&abv_lt=5">1% - 4.9%</option>
+                        <option value="abv_gt=4.9&abv_lt=15">5% - 14.9%</option>
+                        <option value="abv_gt=14.9">15% +</option>
+                    </select>
+                </div>
+
+                <input id="btnSearch" value="Search" type="button" />
+                <div id="or"><h2>OR</h2></div>
+                <h2>See all the beer that BrewDogs has to offer!</h2>
+                <input id="btnGetAllBrews" value="See All Brews" type="button" />
+                <input id="btnRandom" value="Feeling Lucky?" type="button" />
+            </div>
+        </center>
+    </div>
+    <div id="info">
+        <center><h2>Check Out the Brews Below!!</h2></center>
+        <center><p>-If you didn't like what you found search for something differnt!</p></center>
+        <center><p>-You can search individually by name, food pairing, or ABV strength, or have multiple queries and see the results of them all.</p></center>
+        <center><p>-Feeling lucky is a random beer generator. Press this is you're looking for a fun way to discover new brews from Brewdogs!</p></center>
+        <br /><br />
+    </div>
+    <div id="brewContainer">
+        <div class="brews">
+        </div>
+    </div>
+    <div class="Footer">
+        <footer>
+            <p>BrewDogs Brewery 2020, All rights reserved.</p>
+            <p>Site Designer - Alex Drogo: tuj78444@temple.edu</p>
+        </footer>
+    </div>
+    <script>
+        function showInfo() {
+            var x = document.getElementById("info");
+            x.style.display = "block";
+        } 
+
+        $(document).ready(function () {
+           
+            $("#btnRandom").click(function () {
+                var showInfo = document.getElementById("info");
+                showInfo.style.display = "block";
+                $(".brews").html(" ");
+
+                var strURL = "https://api.punkapi.com/v2/beers/random";
+
+                $.ajax({
+                    url: strURL,
+                    dataType: "json",
+                    success: function (data) {
+                        var brews = data;
+                        $(".brews").append("<br><br>");
+                        $('<div>', { id: 'typeDescription', class: 'typeDescription' }).appendTo(".brews");
+                        $("#typeDescription").append("<br>Results Found By Random:<br><br>");
+                        $(".brews").append("<br><br>");
+                        //$(".brews").prepend("<br><br>");
+                        $.each(brews, function (index, brew) {
+
+                            $('<div>', { id: 'brewName' + brew.id, class: 'brewName' }).appendTo(".brews");
+                            $('<div>', { id: 'brewImage' + brew.id, class: 'brewImage' }).appendTo(".brews");
+                            $('<div>', { id: 'brewInfo' + brew.id, class: 'brewInfo' }).appendTo(".brews");
+
+                            $("#brewName").empty();
+                            $("#brewImage").empty();
+                            $("#brewInfo").empty();
+
+                            $("#brewName" + brew.id).append("<br>", brew.name, "<br><br>");
+                            $("#brewImage" + brew.id).append("<br><img src='".concat(brew.image_url, "' />", "<p>"));
+                            $("#brewInfo" + brew.id).append("<br>", "<strong>" + brew.tagline + "<strong>", "<br>", "<strong>" + "Strength: " +
+                                "</strong>", brew.abv, "% Alc By Vol.", "<br>", "<strong>" + "Volume: " + "</strong>", brew.volume.value, " ",
+                                brew.volume.unit, "<br><br><strong>Food Pairings: </strong><br>", "-" + brew.food_pairing[0] + "<br>" +
+                                "-" + brew.food_pairing[1] + "<br>" + "-" + brew.food_pairing[2], "<br><br>", "<strong>" +
+                                "Description: " + "</strong>", "<br>", brew.description, "<br><br>");
+                            $(".brews").append("<br><br>");
+
+                        });
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+            });
+
+            
+            $("#btnSearch").click(function () {
+                var show = document.getElementById("info");
+                show.style.display = "block";
+                $(".brews").html(" ");
+
+                var beerName = $("#txtBeerName").val();
+                var strURLName = "https://api.punkapi.com/v2/beers?beer_name=" + beerName;
+
+                $.ajax({
+                    type: "GET",
+                    url: strURLName,
+                    dataType: "json",
+                    success: function (data) {
+                        var brews = data;
+                        //$(".brews").append("<br>Results Found By Searched Name: " + "<strong>" + beerName + "</strong>" + "<br>");
+                        $(".brews").append("<br><br>");
+                        $('<div>', { id: 'typeDescription', class: 'typeDescription' }).appendTo(".brews");
+                        $("#typeDescription").append("<br>Results Found By Searched Name: " + "<strong>" + beerName + "</strong>" + "<br><br>");
+                        $(".brews").append("<br><br>");
+                        $.each(brews, function (index, brew) {
+
+                            $('<div>', { id: 'brewName' + brew.id, class: 'brewName' }).appendTo(".brews");
+                            $('<div>', { id: 'brewImage' + brew.id, class: 'brewImage' }).appendTo(".brews");
+                            $('<div>', { id: 'brewInfo' + brew.id, class: 'brewInfo' }).appendTo(".brews");
+
+                            $("#brewName").empty();
+                            $("#brewImage").empty();
+                            $("#brewInfo").empty();
+
+                            $("#brewName" + brew.id).append("<br>", brew.name, "<br><br>");
+                            $("#brewImage" + brew.id).append("<br><img src='".concat(brew.image_url, "' />", "<p>"));
+                            $("#brewInfo" + brew.id).append("<br>", "<strong>" + brew.tagline + "<strong>", "<br>", "<strong>" + "Strength: " +
+                                "</strong>", brew.abv, "% Alc By Vol.", "<br>", "<strong>" + "Volume: " + "</strong>", brew.volume.value, " ",
+                                brew.volume.unit, "<br><br><strong>Food Pairings: </strong><br>", "-" + brew.food_pairing[0] + "<br>" +
+                                "-" + brew.food_pairing[1] + "<br>" + "-" + brew.food_pairing[2], "<br><br>", "<strong>" +
+                                "Description: " + "</strong>", "<br>", brew.description, "<br><br>");
+                            $(".brews").append("<br><br>");
+
+                        });
+                    },
+                    error: function (req, status, error) {
+                        //$("#brews").append("Sorry, we were unable to find anything.. Try a different Search! " + "<br>" + "<br>");
+                        console.log("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+            });
+
+            $("#btnSearch").click(function () {
+                var show = document.getElementById("info");
+                show.style.display = "block";
+                //$("#brewName").html(" ");
+                //$("#brewImage").html(" ");
+                //$("#brewInfo").html(" ");
+                $(".brews").html(" ");
+                var pairings = $("#txtFoodPairings").val();
+                var strURLPairings = "https://api.punkapi.com/v2/beers?food=" + pairings;
+
+                $.ajax({
+                    type: "GET",
+                    url: strURLPairings,
+                    dataType: "json",
+                    success: function (data) {
+                        var brews = data;
+                        //$(".brews").append("<br>Results Found By Food Pairing Choice: " + "<strong>" + pairings + "</strong>" + "<br>");
+                        $(".brews").append("<br><br>");
+                        $('<div>', { id: 'typeDescription', class: 'typeDescription' }).appendTo(".brews");
+                        $("#typeDescription").append("<br>Results Found By Food Pairing Choice: " + "<strong>" + pairings + "</strong>" + "<br><br>");
+                        $(".brews").append("<br><br>");
+                        $.each(brews, function (index, brew) {
+
+                            $('<div>', { id: 'brewName' + brew.id, class: 'brewName' }).appendTo(".brews");
+                            $('<div>', { id: 'brewImage' + brew.id, class: 'brewImage' }).appendTo(".brews");
+                            $('<div>', { id: 'brewInfo' + brew.id, class: 'brewInfo' }).appendTo(".brews");
+
+                            $("#brewName" + brew.id).append("<br>", brew.name, "<br><br>");
+                            $("#brewImage" + brew.id).append("<br><img src='".concat(brew.image_url, "' />", "<p>"));
+                            $("#brewInfo" + brew.id).append("<br>", "<strong>" + brew.tagline + "<strong>", "<br>", "<strong>" + "Strength: " +
+                                "</strong>", brew.abv, "% Alc By Vol.", "<br>", "<strong>" + "Volume: " + "</strong>", brew.volume.value, " ",
+                                brew.volume.unit, "<br><br><strong>Food Pairings: </strong><br>", "-" + brew.food_pairing[0] + "<br>" +
+                                "-" + brew.food_pairing[1] + "<br>" + "-" + brew.food_pairing[2], "<br><br>",
+                                "<strong>" + "Description: " + "</strong>", "<br>", brew.description, "<br><br>");
+                            $(".brews").append("<br><br>");
+
+                        });
+                    },
+                    error: function (req, status, error) {
+                        console.log("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+            });
+
+            $("#btnSearch").click(function () {
+                var strength = $("#ddlABV").val();
+                if (strength == "Blank") {
+                    //$("#brews").append("Sorry, we were unable to find anything.. Try a different Search! " + "<br>" + "<br>");
+                } else {
+                    var show = document.getElementById("info");
+                    show.style.display = "block";
+                    $(".brews").html(" ");
+                    var strURLName = "https://api.punkapi.com/v2/beers?" + strength;
+
+                    $.ajax({
+                        type: "GET",
+                        url: strURLName,
+                        dataType: "json",
+                        success: function (data) {
+                            var brews = data;
+                            if (strength == "abv_gt=0.9&abv_lt=5") {
+                                strength = "Weak";
+                            } else if (strength == "abv_gt=4.9&abv_lt=15") {
+                                strength = "Medium";
+                            } else {
+                                strength = "Strong";
+                            }
+                            //$(".brews").append("<br>Results Found By Brew Strength: " + "<strong>" + strength + "</strong>" + "<br>");
+                            $(".brews").append("<br><br>");
+                            $('<div>', { id: 'typeDescription', class: 'typeDescription' }).appendTo(".brews");
+                            $("#typeDescription").append("<br>Results Found By Brew Strength: " + "<strong>" + strength + "</strong>" + "<br><br>");
+                            $(".brews").append("<br><br>");
+                            $.each(brews, function (index, brew) {
+                                $('<div>', { id: 'brewName' + brew.id, class: 'brewName' }).appendTo(".brews");
+                                $('<div>', { id: 'brewImage' + brew.id, class: 'brewImage' }).appendTo(".brews");
+                                $('<div>', { id: 'brewInfo' + brew.id, class: 'brewInfo' }).appendTo(".brews");
+
+                                $("#brewName" + brew.id).append("<br>", brew.name, "<br><br>");
+                                $("#brewImage" + brew.id).append("<br><img src='".concat(brew.image_url, "' />", "<p>"));
+                                $("#brewInfo" + brew.id).append("<br>", "<strong>" + brew.tagline + "<strong>", "<br>", "<strong>" + "Strength: " +
+                                    "</strong>", brew.abv, "% Alc By Vol.", "<br>", "<strong>" + "Volume: " + "</strong>", brew.volume.value, " ",
+                                    brew.volume.unit, "<br><br><strong>Food Pairings: </strong><br>", "-" + brew.food_pairing[0] + "<br>" +
+                                    "-" + brew.food_pairing[1] + "<br>" + "-" + brew.food_pairing[2], "<br><br>", "<strong>" +
+                                    "Description: " + "</strong>", "<br>", brew.description, "<br><br>");
+                                $(".brews").append("<br><br>");
+                            });
+                        },
+                        error: function (req, status, error) {
+                            //$("#brews").append("Sorry, we were unable to find anything.. Try a different Search! " + "<br>" + "<br>");
+                            console.log("Error: " + req.responseText + " | " + status + " | " + error);
+                        }
+                    });
+                }
+            });
+
+            $("#btnGetAllBrews").click(function () {
+                var show = document.getElementById("info");
+                show.style.display = "block";
+                $(".brews").html(" ");
+                var strURL = "https://api.punkapi.com/v2/beers?per_page=80";
+
+                $.ajax({
+                    url: strURL,
+                    dataType: "json",
+                    success: function (data) {
+                        var brews = data;
+                        //$(".brews").append("<br>Results of all Brews:");
+                        $(".brews").append("<br><br>");
+                        $('<div>', { id: 'typeDescription', class: 'typeDescription' }).appendTo(".brews");
+                        $("#typeDescription").append("<br>Results of all Brews:" + "<br><br>");
+                        $(".brews").append("<br><br>");
+                        $.each(brews, function (index, brew) {
+                            $('<div>', { id: 'brewName' + brew.id, class: 'brewName' }).appendTo(".brews");
+                            $('<div>', { id: 'brewImage' + brew.id, class: 'brewImage' }).appendTo(".brews");
+                            $('<div>', { id: 'brewInfo' + brew.id, class: 'brewInfo' }).appendTo(".brews");
+
+                            $("#brewName" + brew.id).append("<br>", brew.name, "<br><br>");
+                            $("#brewImage" + brew.id).append("<br><img src='".concat(brew.image_url, "' />", "<p>"));
+                            $("#brewInfo" + brew.id).append("<br>", "<strong>" + brew.tagline + "<strong>", "<br>", "<strong>" + "Strength: " +
+                                "</strong>", brew.abv, "% Alc By Vol.", "<br>", "<strong>" + "Volume: " + "</strong>", brew.volume.value, " ",
+                                brew.volume.unit, "<br><br><strong>Food Pairings: </strong><br>", "-" + brew.food_pairing[0] + "<br>" +
+                                "-" + brew.food_pairing[1] + "<br>" + "-" + brew.food_pairing[2], "<br><br>", "<strong>" +
+                                "Description: " + "</strong>", "<br>", brew.description, "<br><br>");
+                            $(".brews").append("<br><br>");
+                        });
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+            });
+
+            $("#btnSearch").click(function () {
+                var show = document.getElementById("info");
+                show.style.display = "block";
+                $(".brews").html(" ");
+                var beerName = $("#txtBeerName").val();
+                var pairings = $("#txtFoodPairings").val();
+                var strength = $("#ddlABV").val();
+
+                if ((beerName == "") && (pairings == "") && (strength == "Blank")) {
+                    $(".brews").append("<br><br>Sorry, we were unable to find anything.. Try a different Search! " + "<br>" + "<br>");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
